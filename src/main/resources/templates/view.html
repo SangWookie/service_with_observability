@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="kr">
+<head>
+    <title>Electronic Receipt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+            background-color: #89A8E2;
+            margin: 0;
+            height: 100vh;
+            padding: 16px;
+            font-size: 0.7rem;
+        }
+        .receipt-container {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: left;
+            align-items: center;
+            max-width: 350px;
+            height: 80vh;
+            max-height: 80vh;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            overflow: auto;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+        pre {
+            overflow: auto;
+            justify-content: center;
+            text-align: left;
+            display: flex;
+            margin: 5% auto auto;
+            height: 100% !important;
+            width: 100% !important;
+            white-space: pre-wrap;
+        }
+        * {
+            font-family: "Nanum Gothic Coding", monospace;
+            line-height: 160%;
+            font-weight: 400;
+            font-style: normal;
+        }
+        button {
+            position: fixed;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div class="receipt-container" id="captureArea">
+    <pre th:text="${data}">
+    <!-- 영수증 데이터가 여기에 표시됩니다 -->
+    </pre>
+</div>
+<button id="downloadButton">이미지 다운로드</button>
+
+<script>
+    document.getElementById("downloadButton").addEventListener("click", function () {
+        var content = document.querySelector("#captureArea");
+        setTimeout(() => {
+            var scrollHeight = content.scrollHeight;
+            console.log(scrollHeight);
+
+            // html2canvas를 이용한 캡처
+            html2canvas(content, {
+                height: scrollHeight,
+                useCORS: true,
+                logging: false,
+            })
+                .then(canvas => {
+                        const link = document.createElement("a");
+                        link.download = "receipt.png";
+                        link.href = canvas.toDataURL("image/png");
+                        link.click();
+                    }
+                );
+        },0);
+    });
+</script>
+</body>
+</html>
